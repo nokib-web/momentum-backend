@@ -10,6 +10,7 @@ import {
     validateRequest,
 } from '../middlewares';
 import { UserRole } from '../types';
+import { authLimiter, inviteLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ const router = Router();
  */
 router.post(
     '/login',
+    authLimiter, // Rate limit login attempts
     [validateEmail(), validatePassword(), validateRequest],
     login
 );
@@ -33,6 +35,7 @@ router.post(
     '/invite',
     protect,
     restrictTo(UserRole.ADMIN),
+    inviteLimiter, // Rate limit invite creation
     [validateEmail(), validateRole(), validateRequest],
     inviteUser
 );
@@ -44,6 +47,7 @@ router.post(
  */
 router.post(
     '/register-via-invite',
+    authLimiter, // Rate limit registration attempts
     [validateName(), validatePassword(), validateToken(), validateRequest],
     registerViaInvite
 );
