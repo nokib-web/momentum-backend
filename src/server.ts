@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { connectDB } from './config/database';
+import { errorHandler } from './middlewares';
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +47,9 @@ app.use((req: Request, res: Response) => {
         message: 'Route not found',
     });
 });
+
+// Global error handler (must be last)
+app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
