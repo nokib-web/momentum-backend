@@ -113,6 +113,15 @@ GET /
 ```
 Returns API welcome message
 
+### Authentication
+```
+POST /api/auth/login
+POST /api/auth/invite (Admin only)
+POST /api/auth/register-via-invite
+```
+
+For detailed API documentation with request/response examples, see [API_DOCS.md](./API_DOCS.md)
+
 ## 🤝 Contributing
 
 1. Create a feature branch
