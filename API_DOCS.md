@@ -261,6 +261,193 @@ Authorization: Bearer <token>
 
 ---
 
+## Project Management Endpoints
+
+### 7. Create Project
+**Endpoint:** `POST /api/projects`  
+**Access:** Private (All authenticated users)  
+**Description:** Create a new project
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request Body:**
+```json
+{
+  "name": "New Website Project",
+  "description": "Building a modern responsive website for client"
+}
+```
+
+**Validation:**
+- Name: 3-100 characters
+- Description: 10-500 characters
+
+**Success Response (201):**
+```json
+{
+  "success": true,
+  "message": "Project created successfully",
+  "project": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "New Website Project",
+    "description": "Building a modern responsive website for client",
+    "status": "ACTIVE",
+    "isDeleted": false,
+    "createdBy": {
+      "_id": "507f191e810c19729de860ea",
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "createdAt": "2026-01-30T05:48:00.000Z",
+    "updatedAt": "2026-01-30T05:48:00.000Z"
+  }
+}
+```
+
+**Error Responses:**
+- `400` - Validation errors
+- `401` - Not authenticated
+
+---
+
+### 8. Get All Projects
+**Endpoint:** `GET /api/projects`  
+**Access:** Private (All authenticated users)  
+**Description:** Get all projects with pagination and filters
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Query Parameters:**
+- `page` (optional) - Page number (default: 1)
+- `limit` (optional) - Items per page (default: 10)
+- `status` (optional) - Filter by status (ACTIVE, ARCHIVED, DELETED)
+
+**Example:**
+```
+GET /api/projects?page=1&limit=10&status=ACTIVE
+```
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "projects": [
+    {
+      "_id": "507f1f77bcf86cd799439011",
+      "name": "New Website Project",
+      "description": "Building a modern responsive website for client",
+      "status": "ACTIVE",
+      "isDeleted": false,
+      "createdBy": {
+        "_id": "507f191e810c19729de860ea",
+        "name": "John Doe",
+        "email": "john@example.com"
+      },
+      "createdAt": "2026-01-30T05:48:00.000Z",
+      "updatedAt": "2026-01-30T05:48:00.000Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 15,
+    "totalPages": 2
+  }
+}
+```
+
+**Valid Status Values:**
+- `ACTIVE`
+- `ARCHIVED`
+- `DELETED`
+
+**Error Responses:**
+- `401` - Not authenticated
+
+---
+
+### 9. Update Project
+**Endpoint:** `PATCH /api/projects/:id`  
+**Access:** Private (Admin only)  
+**Description:** Update project details
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request Body (all fields optional):**
+```json
+{
+  "name": "Updated Project Name",
+  "description": "Updated project description",
+  "status": "ARCHIVED"
+}
+```
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "message": "Project updated successfully",
+  "project": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Updated Project Name",
+    "description": "Updated project description",
+    "status": "ARCHIVED",
+    "isDeleted": false,
+    "createdBy": {
+      "_id": "507f191e810c19729de860ea",
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "createdAt": "2026-01-30T05:48:00.000Z",
+    "updatedAt": "2026-01-30T06:00:00.000Z"
+  }
+}
+```
+
+**Error Responses:**
+- `400` - Invalid status value
+- `401` - Not authenticated
+- `403` - Not authorized (not admin)
+- `404` - Project not found or deleted
+
+---
+
+### 10. Delete Project
+**Endpoint:** `DELETE /api/projects/:id`  
+**Access:** Private (Admin only)  
+**Description:** Soft delete a project (sets isDeleted=true, status=DELETED)
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "message": "Project deleted successfully"
+}
+```
+
+**Error Responses:**
+- `401` - Not authenticated
+- `403` - Not authorized (not admin)
+- `404` - Project not found or already deleted
+
+**Note:** This is a soft delete. The project is marked as deleted but remains in the database.
+
+---
+
 ## Common Error Response Format
 
 ```json
