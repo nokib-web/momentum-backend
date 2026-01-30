@@ -125,6 +125,142 @@ Authorization: Bearer <token>
 
 ---
 
+## User Management Endpoints
+
+### 4. Get All Users
+**Endpoint:** `GET /api/users`  
+**Access:** Private (Admin only)  
+**Description:** Get all users with pagination
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Query Parameters:**
+- `page` (optional) - Page number (default: 1)
+- `limit` (optional) - Items per page (default: 10)
+
+**Example:**
+```
+GET /api/users?page=1&limit=10
+```
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "users": [
+    {
+      "_id": "507f1f77bcf86cd799439011",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "MANAGER",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-30T05:39:00.000Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 25,
+    "totalPages": 3
+  }
+}
+```
+
+**Error Responses:**
+- `401` - Not authenticated
+- `403` - Not authorized (not admin)
+
+---
+
+### 5. Update User Role
+**Endpoint:** `PATCH /api/users/:id/role`  
+**Access:** Private (Admin only)  
+**Description:** Update a user's role
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request Body:**
+```json
+{
+  "role": "MANAGER"
+}
+```
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "message": "User role updated successfully",
+  "user": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "MANAGER",
+    "status": "ACTIVE",
+    "createdAt": "2026-01-30T05:39:00.000Z"
+  }
+}
+```
+
+**Error Responses:**
+- `400` - Invalid role
+- `401` - Not authenticated
+- `403` - Not authorized (not admin)
+- `404` - User not found
+
+---
+
+### 6. Update User Status
+**Endpoint:** `PATCH /api/users/:id/status`  
+**Access:** Private (Admin only)  
+**Description:** Activate or deactivate a user account
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Request Body:**
+```json
+{
+  "status": "INACTIVE"
+}
+```
+
+**Valid Status Values:**
+- `ACTIVE`
+- `INACTIVE`
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "message": "User status updated successfully",
+  "user": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "MANAGER",
+    "status": "INACTIVE",
+    "createdAt": "2026-01-30T05:39:00.000Z"
+  }
+}
+```
+
+**Error Responses:**
+- `400` - Invalid status or attempting to deactivate own account
+- `401` - Not authenticated
+- `403` - Not authorized (not admin)
+- `404` - User not found
+
+---
+
 ## Common Error Response Format
 
 ```json

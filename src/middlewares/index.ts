@@ -7,6 +7,8 @@ export {
     validatePassword,
     validateName,
     validateRole,
+    validateRoleRequired,
+    validateStatus,
     validateProjectName,
     validateProjectDescription,
     validateToken,

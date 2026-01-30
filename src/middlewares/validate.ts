@@ -63,6 +63,22 @@ export const validateRole = (): ValidationChain =>
         .isIn(Object.values(UserRole))
         .withMessage(`Role must be one of: ${Object.values(UserRole).join(', ')}`);
 
+// Role validation (required)
+export const validateRoleRequired = (): ValidationChain =>
+    body('role')
+        .notEmpty()
+        .withMessage('Role is required')
+        .isIn(Object.values(UserRole))
+        .withMessage(`Role must be one of: ${Object.values(UserRole).join(', ')}`);
+
+// Status validation
+export const validateStatus = (): ValidationChain =>
+    body('status')
+        .notEmpty()
+        .withMessage('Status is required')
+        .isIn(['ACTIVE', 'INACTIVE'])
+        .withMessage('Status must be either ACTIVE or INACTIVE');
+
 // Project name validation
 export const validateProjectName = (): ValidationChain =>
     body('name')

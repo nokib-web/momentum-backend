@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { connectDB } from './config/database';
 import { errorHandler } from './middlewares';
-import { authRoutes } from './routes';
+import { authRoutes, userRoutes } from './routes';
 
 // Load environment variables
 dotenv.config();
@@ -43,6 +43,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
