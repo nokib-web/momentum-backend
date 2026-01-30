@@ -36,9 +36,6 @@ const inviteSchema = new Schema<IInvite>({
     },
 });
 
-// Create index on token field for faster lookups
-inviteSchema.index({ token: 1 });
-
 // Method to check if invite is expired
 inviteSchema.methods.isExpired = function (): boolean {
     return new Date() > this.expiresAt;
