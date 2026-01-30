@@ -144,7 +144,7 @@ export const registerViaInvite = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const { name, password, inviteToken } = req.body;
+        const { name, password, token: inviteToken } = req.body;
 
         // Find invite by token
         const invite = await Invite.findOne({ token: inviteToken });

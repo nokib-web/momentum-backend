@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import User from '../models/User';
 import Project from '../models/Project';
@@ -9,51 +8,48 @@ dotenv.config();
 const seedDatabase = async () => {
     try {
         // Connect to MongoDB
-        const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/momentum';
+        const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/momentum';
         await mongoose.connect(mongoUri);
-        console.log('📦 Connected to MongoDB');
+        console.log(' Connected to MongoDB');
 
         // Clear existing data
         await User.deleteMany({});
         await Project.deleteMany({});
         console.log('🗑️  Cleared existing data');
 
-        // Create Admin User
-        const adminPassword = await bcrypt.hash('Admin123!', 10);
+        // Create Admin User (password will be hashed by pre-save hook)
         const admin = await User.create({
             name: 'Admin User',
             email: 'admin@momentum.com',
-            password: adminPassword,
+            password: 'Admin123!',
             role: 'ADMIN',
             status: 'ACTIVE',
         });
         console.log('✅ Created admin user: admin@momentum.com / Admin123!');
 
         // Create Manager User
-        const managerPassword = await bcrypt.hash('Manager123!', 10);
         const manager = await User.create({
             name: 'John Manager',
             email: 'manager@momentum.com',
-            password: managerPassword,
+            password: 'Manager123!',
             role: 'MANAGER',
             status: 'ACTIVE',
         });
         console.log('✅ Created manager user: manager@momentum.com / Manager123!');
 
         // Create Staff Users
-        const staffPassword = await bcrypt.hash('Staff123!', 10);
         const staff1 = await User.create({
-            name: 'Alice Staff',
-            email: 'alice@momentum.com',
-            password: staffPassword,
+            name: 'Nokib Staff',
+            email: 'nokib@momentum.com',
+            password: 'Staff123!',
             role: 'STAFF',
             status: 'ACTIVE',
         });
 
         const staff2 = await User.create({
-            name: 'Bob Staff',
-            email: 'bob@momentum.com',
-            password: staffPassword,
+            name: 'Hasan Staff',
+            email: 'hasan@momentum.com',
+            password: 'Staff123!',
             role: 'STAFF',
             status: 'ACTIVE',
         });
@@ -112,18 +108,18 @@ const seedDatabase = async () => {
         ];
 
         await Project.insertMany(projects);
-        console.log('✅ Created sample projects');
+        console.log(' Created sample projects');
 
-        console.log('\n🎉 Database seeded successfully!');
-        console.log('\n📝 Login Credentials:');
+        console.log('\n Database seeded successfully!');
+        console.log('\n Login Credentials:');
         console.log('   Admin:   admin@momentum.com / Admin123!');
         console.log('   Manager: manager@momentum.com / Manager123!');
-        console.log('   Staff:   alice@momentum.com / Staff123!');
-        console.log('   Staff:   bob@momentum.com / Staff123!');
+        console.log('   Staff:   nokib@momentum.com / Staff123!');
+        console.log('   Staff:   hasan@momentum.com / Staff123!');
 
         process.exit(0);
     } catch (error) {
-        console.error('❌ Error seeding database:', error);
+        console.error(' Error seeding database:', error);
         process.exit(1);
     }
 };
