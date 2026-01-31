@@ -15,17 +15,29 @@ export const getAllUsers = async (
         // Get pagination params from query
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
+        const search = req.query.search as string;
         const skip = (page - 1) * limit;
 
+        // Build query
+        const query: any = {};
+
+        // Apply search filter if provided
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } },
+            ];
+        }
+
         // Find all users with pagination
-        const users = await User.find()
+        const users = await User.find(query)
             .select('name email role status createdAt')
             .skip(skip)
             .limit(limit)
             .sort({ createdAt: -1 });
 
         // Get total count
-        const total = await User.countDocuments();
+        const total = await User.countDocuments(query);
         const totalPages = Math.ceil(total / limit);
 
         res.status(200).json({

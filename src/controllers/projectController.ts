@@ -48,6 +48,7 @@ export const getAllProjects = async (
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
         const status = req.query.status as string;
+        const search = req.query.search as string;
         const skip = (page - 1) * limit;
 
         // Build query
@@ -56,6 +57,14 @@ export const getAllProjects = async (
         // Apply status filter if provided
         if (status && Object.values(ProjectStatus).includes(status as ProjectStatus)) {
             query.status = status;
+        }
+
+        // Apply search filter if provided
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+            ];
         }
 
         // Find all projects with pagination
