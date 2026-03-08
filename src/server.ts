@@ -17,8 +17,35 @@ const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(helmet()); // Security headers
-app.use(cors()); // Enable CORS
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+})); // Security headers
+
+// CORS Configuration
+const envOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'https://momentum-frontend-two.vercel.app',
+    ...envOrigins
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev')); // Logging (development only)
 }
